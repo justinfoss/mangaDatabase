@@ -4,9 +4,16 @@ import re
 import databaseInteract
 import sqlite3
 import asyncio
+from dotenv import load_dotenv
+import os
 
-big = ["https://www.mangaupdates.com/lists/public/1v07qpu/2","https://www.mangaupdates.com/lists/public/1v07qpu/0"]
-#url = "https://www.mangaupdates.com/lists/public/1v07qpu/2"
+load_dotenv()
+
+userString = os.getenv("mangaUpdatesUserString")
+
+# Searches the public lists of reading and complete.
+big = [f"https://www.mangaupdates.com/lists/public/{userString}/2",f"https://www.mangaupdates.com/lists/public/{userString}/0"]
+#url = f"https://www.mangaupdates.com/lists/public/{userString}/2"
 
 def get_chapter_number_from_latest_release(soup):
         # Find all divs with the correct class
@@ -43,7 +50,7 @@ def pullFromWeb():
     for url in big:
         response = requests.get(url)
         soup = BeautifulSoup(response.text, "html.parser")
-        if url == "https://www.mangaupdates.com/lists/public/1v07qpu/2":
+        if url == f"https://www.mangaupdates.com/lists/public/{userString}/2":
             for row in soup.select("div.public-list-row_alt__wlDod"):
                 # Title and URL
                 a_tag = row.select_one("a[title='Click for Series Info']")
@@ -78,7 +85,7 @@ def pullFromWeb():
                     print(" ")
                 else:
                     print("Something broke")
-        elif url == "https://www.mangaupdates.com/lists/public/1v07qpu/0":
+        elif url == f"https://www.mangaupdates.com/lists/public/{userString}/0":
             for row in soup.select("div.public-list-row_alt__wlDod"):
                 # Title and URL
                 a_tag = row.select_one("a[title='Click for Series Info']")
